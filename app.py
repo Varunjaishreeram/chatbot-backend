@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import requests
 from dotenv import load_dotenv
 import os
@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 # Enable CORS for all origins
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Environment variables for sensitive data
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
