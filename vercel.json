@@ -1,0 +1,12 @@
+{
+    "builds": [
+      {
+        "src": "app.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "env": {
+      "FLASK_APP": "app.py"
+    }
+  }
+  
