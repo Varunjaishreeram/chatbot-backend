@@ -8,14 +8,23 @@ load_dotenv()
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/chat": {"origins": "https://chatbot-frontend-beta-gray.vercel.app"}})
+# Enable CORS for all origins
+CORS(app)
 
 # Environment variables for sensitive data
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 SEARCH_ENGINE_ID = os.getenv("SEARCH_ENGINE_ID")
 
-@app.route("/chat", methods=["POST"])
+@app.route("/chat", methods=["OPTIONS", "POST"])
 def chat():
+    if request.method == "OPTIONS":
+        # Handle preflight request
+        response = jsonify({"message": "CORS preflight request successful."})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        return response
+
     user_message = request.json.get("message", "").strip()
     if not user_message:
         return jsonify({"reply": "Please provide a valid query."})
@@ -51,9 +60,10 @@ def chat():
         reply = {"reply": "Error connecting to Google Search API."}
     except Exception as e:
         reply = {"reply": f"An unexpected error occurred: {str(e)}"}
-    
-    print(reply,"reply")
-    return jsonify(reply)
+
+    response = jsonify(reply)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)
