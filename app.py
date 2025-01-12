@@ -7,7 +7,8 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, resources={r"/chat": {"origins": "https://chatbot-frontend-beta-gray.vercel.app"}})
 
 # Environment variables for sensitive data
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
